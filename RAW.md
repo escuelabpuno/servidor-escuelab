@@ -24,69 +24,58 @@
 
 ### Instalación estandar de Ubuntu Server
 
+~~~.bash
+sudo apt-get install standard^ openssh-server^ server^
+echo "deb http://archive.zentyal.org/zentyal 5.0 main" | sudo tee /etc/apt/sources.list.d/zentyal.list
+sudo apt-key add zentyal.key
+sudo apt-get update
+sudo apt-get dist-upgrade
+sudo apt-get install zentyal language-pack-zentyal-es
+~~~
+
 ### Instalar Servicios
 
 ~~~.bash
 sudo apt-get update
-sudo apt-get install tasksel
-sudo tasksel install standard openssh-server server lamp-server
+sudo apt-get install lamp-server^
 sudo apt-get install libapache2-mpm-itk
+sudo apt-get install language-pack-es thunderbird-locale-es thunderbird-locale-es-ar libreoffice-help-en-gb wspanish libreoffice-help-es thunderbird-locale-en-gb thunderbird-locale-en-us mythes-es mythes-en-au thunderbird-locale-en thunderbird-locale-es-es wbritish hyphen-en-us hyphen-en-gb hunspell-en-gb libreoffice-l10n-es hunspell-en-za hunspell-es hunspell-en-au libreoffice-help-en-us hunspell-en-ca firefox-locale-es mythes-en-us libreoffice-l10n-en-gb openoffice.org-hyphenation hyphen-es libreoffice-l10n-en-za
+sudo apt-get install graphviz aspell-es php-pspell php-curl php-gd php-intl  php-mysql php-xml php-xmlrpc php-ldap php-zip php-cli php-json  php-opcache php-readline php-mbstring php-mcrypt php-imagick php-soap
 ~~~
 
 ### Instalar Paquetes extra
 
-#### Emby
-
 ~~~.bash
 echo "deb http://download.opensuse.org/repositories/home:/emby/xUbuntu_16.04/ /" | sudo tee /etc/apt/sources.list.d/emby.list
 sudo apt-key add emby.key
-sudo apt-get update
-sudo apt-get install emby-server
-~~~
 
-#### Webmin
-
-~~~.bash
-echo "deb http://download.webmin.com/download/repository sarge contrib" | sudo tee /etc/apt/sources.list.d/webmin.list
-sudo apt-key add webmin.key
-sudo apt-get update
-sudo apt-get install webmin
-~~~
-
-#### Certbot
-
-~~~.bash
 echo "deb http://ppa.launchpad.net/certbot/certbot/ubuntu xenial main" | sudo tee /etc/apt/sources.list.d/certbot.list
 sudo apt-key add certbot.key
-sudo apt-get update
-sudo apt-get install python-certbot-apache
-~~~
 
-#### KaLite
-
-~~~.bash
 echo "deb http://ppa.launchpad.net/learningequality/ka-lite/ubuntu xenial main" | sudo tee /etc/apt/sources.list.d/kalite.list
 sudo apt-key add kalite.key
-sudo apt-get update
-sudo apt-get install ka-lite
-~~~
 
-#### Webupd8
-
-~~~.bash
 echo "deb http://ppa.launchpad.net/nilarimogard/webupd8/ubuntu xenial main" | sudo tee /etc/apt/sources.list.d/webupd8.list
 sudo apt-key add webupd8.key
-sudo apt-get update
-sudo apt-get install youtube-dl
-~~~
 
-#### Zentyal
-
-~~~.bash
-echo "deb http://archive.zentyal.org/zentyal 5.0 main" | sudo tee /etc/apt/sources.list.d/zentyal.list
-wget -q http://keys.zentyal.org/zentyal-5.0-archive.asc -O- | sudo apt-key add -
 sudo apt-get update
-sudo apt-get install zentyal
+sudo apt-get upgrade
+sudo apt-get dist-upgrade
+sudo apt-get install emby-server python-certbot-apache ka-lite youtube-dl
+
+sudo systemctl stop ka-lite.service
+sudo usermod -d /home/kalite -m kalite
+#sudo mv /var/kalite /home/
+sudo systemctl start ka-lite.service
+
+sudo mkdir ../emby
+sudo chown emby:emby ../emby
+
+sudo adduser --system --home /home/campus --ingroup www-data campus
+sudo adduser --system --home /home/sitios --ingroup www-data sitios
+sudo adduser --system --home /home/nube --ingroup www-data nube
+sudo adduser --system --home /home/kiwix --ingroup nogroup kiwix
+
 ~~~
 
 # Apendice
@@ -100,12 +89,8 @@ wget -c -i dl.list -P $HOME/content/
 cd ~
 ls content/*.zim | while read line ; do echo $line ; kiwix-manage library.xml add ./$line ; done
 kiwix-serve --library --port=8080 --daemon library.xml
-~~~
-
-https://192.168.1.150:8443/Software/InstallPkgs?install=1&
-zentyal-samba zentyal-dns zentyal-dhcp zentyal-firewall zentyal-ca zentyal-squid zentyal-jabber
 
 
-
-941073719
-999403314
+wget http://pantry.learningequality.org/downloads/ka-lite/0.17/content/contentpacks/es.zip
+wget https://pepe.escuelabpuno.org/descargas/en.zip
+~~
