@@ -83,12 +83,14 @@ sudo adduser --system --home /home/kiwix --ingroup nogroup kiwix
 ## Anotaciones
 ~~~.bash
 cd /tmp
-wget http://download.kiwix.org/library/library_zim.xml
-for i in 19 20 21 22 23 24 25 ; do grep _es_ library_zim.xml | cut -d \" -f $i | grep http ; done | sed 's/.meta4//' | sort -r | grep -v -e venezuela -e ecured | while read file ; do echo $file | tee -a dl.list ; wget --spider $file |& grep Longitud | cut -d ' ' -f 1,2,3 ; done
+curl -L https://download.kiwix.org/library/library_zim.xml -o library_zim.xml
+for i in 19 20 21 22 23 24 25 ; do grep _es_ library_zim.xml | cut -d \" -f $i | grep http ; done | sed 's/.meta4//' | sort -r | grep -v -e venezuela -e ecured | while read file ; do echo $file | tee -a dl.list ; wget --spider $file |& grep -e Longitud -e Length | cut -d ' ' -f 1,2,3 ; done
 wget -c -i dl.list -P $HOME/content/
 cd ~
-ls content/*.zim | while read line ; do echo $line ; kiwix-manage library.xml add ./$line ; done
-kiwix-serve --library --port=8080 --daemon library.xml
+curl -L "https://download.kiwix.org/nightly/`date --date=yesterday +%Y-%m-%d`/kiwix-tools_linux64_`date --date=yesterday +%Y-%m-%d`.tar.gz" | tar xj
+
+ls content/*.zim | while read line ; do echo $line ; bin/kiwix-manage library.xml add ./$line ; done
+kiwix-serve --library --port=8080 ~/library.xml
 
 
 wget http://pantry.learningequality.org/downloads/ka-lite/0.17/content/contentpacks/es.zip
