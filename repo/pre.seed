@@ -1,0 +1,167 @@
+## Seleccionar idioma antes de Instalar
+# En el selector de arranque agregar:
+#
+
+d-i debian-installer/locale string es_PE.UTF-8
+d-i console-setup/ask_detect boolean false
+d-i keyboard-configuration/xkb-keymap select es
+#d-i keyboard-configuration/xkb-keymap select latam
+
+### Network configuration
+
+d-i netcfg/choose_interface select auto
+#d-i netcfg/link_wait_timeout string 10
+d-i netcfg/get_hostname string servidor
+d-i netcfg/get_domain string escuelab.lan
+
+# Disable that annoying WEP key dialog.
+d-i netcfg/wireless_wep string
+# The wacky dhcp hostname that some ISPs use as a password of sorts.
+#d-i netcfg/dhcp_hostname string radish
+
+### Mirror settings
+d-i mirror/country string manual
+d-i mirror/http/hostname string pepe
+d-i mirror/http/directory string /mirror/archive.ubuntu.com/ubuntu
+d-i mirror/http/proxy string
+
+# To create a normal user account.
+d-i passwd/user-fullname string Administrador de Sistemas
+d-i passwd/username string administrado
+# or encrypted using a crypt(3) hash.
+d-i passwd/user-password-crypted $6$zpocvvKsz$IFHIi.CIOCfoBudtfrg9K42Tmhj8ODq1gBxJi0ONhQjZAMTnRzrH56l3IJ8ZcsjZFICjQUnYyTqCvNbEUtmLQ.
+# generated with mkpasswd -m sha-512 from whois package
+d-i user-setup/allow-password-weak boolean true
+d-i user-setup/encrypt-home boolean false
+
+### Clock and time zone setup
+d-i clock-setup/utc boolean true
+d-i time/zone string America/Lima
+#d-i clock-setup/ntp-server string pepe
+
+### Partitioning
+#d-i partman-auto/disk string /dev/sda
+d-i partman-auto/method string regular
+
+#Avoid warnings
+d-i partman-lvm/device_remove_lvm boolean true
+d-i partman-md/device_remove_md boolean true
+d-i partman-lvm/confirm boolean true
+d-i partman-lvm/confirm_nooverwrite boolean true
+
+d-i partman-auto/choose_recipe select atomic
+
+# This makes partman automatically partition without confirmation, provided
+# that you told it what to do using one of the methods above.
+d-i partman-partitioning/confirm_write_new_label boolean true
+d-i partman/choose_partition select finish
+d-i partman/confirm boolean true
+d-i partman/confirm_nooverwrite boolean true
+
+### Apt setup
+d-i base-installer/install-recommends boolean true
+d-i apt-setup/restricted boolean true
+d-i apt-setup/universe boolean true
+d-i apt-setup/multiverse boolean true
+d-i apt-setup/backports boolean true
+# Uncomment this if you don't want to use a network mirror.
+#d-i apt-setup/use_mirror boolean false
+# Select which update services to use; define the mirrors to be used.
+# Values shown below are the normal defaults.
+d-i apt-setup/services-select multiselect security
+d-i apt-setup/security_host string pepe
+d-i apt-setup/security_path string /mirror/security.ubuntu.com/ubuntu
+
+# Additional repositories, local[0-9] available
+#d-i apt-setup/local0/repository string \
+#       http://local.server/ubuntu xenial main
+#d-i apt-setup/local0/comment string local server
+# Enable deb-src lines
+#d-i apt-setup/local0/source boolean true
+# URL to the public key of the local repository; you must provide a key or
+# apt will complain about the unauthenticated repository and so the
+# sources.list line will be left commented out
+#d-i apt-setup/local0/key string http://local.server/key
+
+# By default the installer requires that repositories be authenticated
+# using a known gpg key. This setting can be used to disable that
+# authentication. Warning: Insecure, not recommended.
+#d-i debian-installer/allow_unauthenticated boolean true
+
+# Uncomment this to add multiarch configuration for i386
+#d-i apt-setup/multiarch string i386
+
+
+### Package selection
+tasksel tasksel/first multiselect standard, openssh-server, server
+# ubuntustudio-audio, ubuntustudio-font-meta, ubuntustudio-graphics, \
+# ubuntustudio-photography, ubuntustudio-publishing, ubuntustudio-video
+
+# Individual additional packages to install
+#d-i pkgsel/include string\
+# libreoffice libreoffice-l10n-es libreoffice-help-es\
+# chromium-browser chromium-browser-l10n chromium-codecs-ffmpeg-extra\
+# build-essential idle3 geany openjdk-8-jre openjdk-8-jdk\
+# gnome-disk-utility epoptes
+# ubuntu-edu-preschool ubuntu-edu-primary\
+# ubuntu-edu-secondary ubuntu-edu-tertiary\
+# gnucap gnuchess gcompris-sound-es
+
+# Whether to upgrade packages after debootstrap.
+# Allowed values: none, safe-upgrade, full-upgrade
+#d-i pkgsel/upgrade select none
+
+# Language pack selection
+d-i pkgsel/language-packs multiselect es, en
+
+# Policy for applying updates. May be "none" (no automatic updates),
+# "unattended-upgrades" (install security updates automatically), or
+d-i pkgsel/update-policy select unattended-upgrades
+
+### Boot loader installation
+
+d-i grub-installer/only_debian boolean true
+
+# Optional password for grub, either in clear text
+#d-i grub-installer/password password r00tme
+#d-i grub-installer/password-again password r00tme
+
+### Finishing up the installation
+
+# Avoid that last message about the install being complete.
+d-i finish-install/reboot_in_progress note
+
+### Preseeding other packages
+# Depending on what software you choose to install, or if things go wrong
+# during the installation process, it's possible that other questions may
+# be asked. You can preseed those too, of course. To get a list of every
+# possible question that could be asked during an install, do an
+# installation, and then run these commands:
+#   debconf-get-selections --installer > file
+#   debconf-get-selections >> file
+
+
+#### Advanced options
+### Running custom commands during the installation
+# d-i preseeding is inherently not secure. Nothing in the installer checks
+# for attempts at buffer overflows or other exploits of the values of a
+# preconfiguration file like this one. Only use preconfiguration files from
+# trusted locations! To drive that home, and because it's generally useful,
+# here's a way to run any shell command you'd like inside the installer,
+# automatically.
+
+# This first command is run as early as possible, just after
+# preseeding is read.
+#d-i preseed/early_command string anna-install some-udeb
+
+# This command is run immediately before the partitioner starts. It may be
+# useful to apply dynamic partitioner preseeding that depends on the state
+# of the disks (which may not be visible when preseed/early_command runs).
+#d-i partman/early_command \
+#       string debconf-set partman-auto/disk "$(list-devices disk | head -n1)"
+
+# This command is run just before the install finishes, but when there is
+# still a usable /target directory. You can chroot to /target and use it
+# directly, or use the apt-install and in-target commands to easily install
+# packages and run commands in the target system.
+#d-i preseed/late_command string apt-install zsh; in-target chsh -s /bin/zsh
