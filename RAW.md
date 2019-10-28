@@ -46,22 +46,18 @@ sudo apt-get install graphviz aspell-es php-pspell php-curl php-gd php-intl  php
 ### Instalar Paquetes extra
 
 ~~~.bash
-echo "deb http://download.opensuse.org/repositories/home:/emby/xUbuntu_16.04/ /" | sudo tee /etc/apt/sources.list.d/emby.list
-sudo apt-key add emby.key
+sudo apt-get install apt-transport-https
+wget -O - https://repo.jellyfin.org/jellyfin_team.gpg.key | sudo apt-key add -
+echo "deb https://repo.jellyfin.org/ubuntu bionic main" | sudo tee /etc/apt/sources.list.d/jellyfin.list
+sudo apt update
+sudo apt install jellyfin
 
-echo "deb http://ppa.launchpad.net/certbot/certbot/ubuntu xenial main" | sudo tee /etc/apt/sources.list.d/certbot.list
-sudo apt-key add certbot.key
 
-echo "deb http://ppa.launchpad.net/learningequality/ka-lite/ubuntu xenial main" | sudo tee /etc/apt/sources.list.d/kalite.list
-sudo apt-key add kalite.key
-
-echo "deb http://ppa.launchpad.net/nilarimogard/webupd8/ubuntu xenial main" | sudo tee /etc/apt/sources.list.d/webupd8.list
-sudo apt-key add webupd8.key
 
 sudo apt-get update
 sudo apt-get upgrade
 sudo apt-get dist-upgrade
-sudo apt-get install emby-server python-certbot-apache ka-lite youtube-dl
+sudo apt-get install youtube-dl
 
 sudo systemctl stop ka-lite.service
 sudo usermod -d /home/kalite -m kalite

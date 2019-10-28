@@ -6,7 +6,7 @@ Contiene los siguientes componentes:
 
 - Ubuntu LTS
 - KhanAcademy
-- Emby Server
+- Jellyfin Server
 - Moodle
 - NextCloud
 - Kiwix

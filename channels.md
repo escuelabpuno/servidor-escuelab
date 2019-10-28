@@ -9,9 +9,6 @@ https://www.youtube.com/channel/UCX16cLWl6dCjlZMgUBxgGkA
 Khan Academy Español
 https://www.youtube.com/user/KhanAcademyEspanol/featured
 
-Hugox Chugox
-https://www.youtube.com/user/hugoxavierpr
-
 https://www.youtube.com/user/josueaguirre
 
 https://www.youtube.com/user/ElRobotdePlaton
